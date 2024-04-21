@@ -1,0 +1,29 @@
+//can fail, at the project the fail can be mitigated
+
+#include <stdio.h>
+#include <stdlib.h>
+
+//make it one step or smth
+void basicbsearch(int lim, int num)
+{
+	int guess = lim/2;
+	int delta = guess/2;
+	while (guess!=num)
+	{
+		printf("guess: %d\n", guess);
+		if (guess>num){
+			guess-=delta;
+			guess = abs(guess);
+		}//...
+		else{
+			guess+=delta;
+		}
+		delta = (delta+1) / 2;
+	}
+	printf("ans: %d\n", guess);
+}
+
+int main(int argc, char **argv)
+{
+	basicbsearch(strtol(argv[1], NULL, 10),strtol(argv[2], NULL, 10));
+}

@@ -1,0 +1,2 @@
+this dictionary used here somewhat 'optimistic'..
+when the project does not compile check the hardcoded paths..
