@@ -47,6 +47,7 @@ int main(int argc, char **argv)
 		{
 			//expand str or smth.....
 			free(todecode);
+			lenn/=2;
         		todecode = lowerplus(str, &lenn, 0);
 			decode(todecode, len, i, decoded, &decodedlen);
 			printf("%lld\t%.*s\n", eval, decodedlen, decoded);
