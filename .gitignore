@@ -1,2 +1,1 @@
-/objfiles/*
-!/objfiles/
+/objfiles/*.o
