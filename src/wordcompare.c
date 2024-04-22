@@ -7,9 +7,8 @@
 int comparewrd(wrd *w_one, wrd *w_two)
 {
 	int res = 0;
-	//int len_one = strlen(w_one);
-	//int len_two = strlen(w_two);
-	int iterations = (w_one->len<w_two->len)?w_one->len:w_two->len;
+	int iterations = (w_one->len < w_two->len)?w_one->len:w_two->len;
+	printf("comparing: %.*s, %.*s\n", w_one->len, w_one->str, w_two->len, w_two->str);
 	//unnecessary checks?
 	
 	for (int i=0;i<iterations;i++)

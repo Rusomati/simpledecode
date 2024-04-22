@@ -17,7 +17,7 @@ int main(int argc, char **argv)
 
 	char *str = (argc==3)?argv[2]:argv[1];
 	int lenn = strlen(str);
-        char *todecode = lowerplus(str, &lenn, 1);//[r]
+        char *todecode = lowerplus(str, &lenn, flagss.ignorequotes);//[r]
 	
 	int len = lenn/2;//
 	char *decoded = malloc(2 * len * sizeof(char));

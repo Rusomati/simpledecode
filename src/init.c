@@ -9,7 +9,7 @@ int init(int argc, char **argv, flags *flagss)
 		//multiple fprintf calls..
 		fprintf(stderr, "usage: %s [flags] <string to decode>\n", argv[0]);
 		fprintf(stderr, "flags: -[qrth][a hexidecimal character representing a 'threshold']\n");
-		fprintf(stderr, "q: dont ignore quotes, r: decrypt ROT\n");
+		fprintf(stderr, "q: dont ignore quotes and dont lower capita letters, r: decrypt ROT\n");
 		fprintf(stderr, "t: print results as they get found, h: half keys tested\n");
 		exit(-1);
 	}

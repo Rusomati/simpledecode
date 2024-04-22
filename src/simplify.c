@@ -50,9 +50,10 @@ wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 	for (;chcnter<len;chcnter++)
 	{
 		if (str[chcnter]>='a'&&str[chcnter]<='z');
-		//else if (str[chcnter]>='A'&&str[chcnter]<='Z'){
-		//	str[chcnter]+='a'-'A';
-		//}
+		else if (str[chcnter]>='A'&&str[chcnter]<='Z'){
+			//str[chcnter]+='a'-'A';
+			;
+		}
 		else if (str[chcnter]=='\'')shouldfilter = 1;
 		else{
 			//hacks can suck a lot..the hack is now more complicated than
