@@ -9,9 +9,9 @@ all: ../objfiles main
 ../objfiles:
 	mkdir ../objfiles
 
-main: ../objfiles/main.o ../objfiles/init.o ../objfiles/lowerplus.o ../objfiles/decode.o \
-../objfiles/word.o ../objfiles/simplify.o ../objfiles/dictword.o ../objfiles/wordcompare.o\
-../objfiles/wordsinfile.o ../objfiles/streval.o
+main: ../objfiles/main.o ../objfiles/init.o ../objfiles/lowerplus.o ../objfiles/rot.o\
+../objfiles/decode.o ../objfiles/word.o ../objfiles/simplify.o ../objfiles/dictword.o\
+../objfiles/wordcompare.o ../objfiles/wordsinfile.o ../objfiles/streval.o
 	echo "linking debug build"
 	$(CC) $(LDFLAGS) $(CFLAGS) $^ $(LOADLIBES) $(LDLIBS) -o $@
 
@@ -22,6 +22,9 @@ main: ../objfiles/main.o ../objfiles/init.o ../objfiles/lowerplus.o ../objfiles/
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $^ -o $@
 
 ../objfiles/lowerplus.o: lowerplus.c
+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $^ -o $@
+
+../objfiles/rot.o: rot.c
 	$(CC) -c $(CPPFLAGS) $(CFLAGS) $^ -o $@
 
 ../objfiles/decode.o: decode.c

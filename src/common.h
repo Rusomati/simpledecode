@@ -25,6 +25,8 @@ int init(int argc, char **argv, flags *flagss);
 char *lowerplus(char *str, int *length, byte lwr);
 //lowers the string then pads it with spaces (for decoding)
 
+void decoderot(char *buf, char *str, int len, int key, byte capitaloff);
+
 void decode(char *text, int len, int offset, char *res, int *reslen);
 //(transponder?) decoder
 

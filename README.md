@@ -3,3 +3,5 @@ the project iterates over all possible keys(brute force) then checks result word
 this is my biggest project yet and it probably has the most sane looking code, still it is not well optimised (object lifetimes and unecessary allocations),
 the time of writing this, utils is messed up, i might and might not fix stuff as i dont have a lot of time,
 some options are unimplemented or untested
+
+as of rn there is some useless code uhhhhhhhhhhhhhhhhh
