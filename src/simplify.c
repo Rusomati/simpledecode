@@ -37,6 +37,7 @@ int filter(wrd *word)
 
 wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 {
+	printf("%.*s\n", buf->len, buf->str);
 	int len = buf->len;
 	char *str = buf->str;
 	wrd *words = malloc((len/2) * sizeof(wrd));//maximum word entries possible
@@ -62,14 +63,13 @@ wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 				if(!filter(&words[wordcounter-1])){
 					wordcounter--;
 				}
-				//shouldfilter = 0;
+				shouldfilter = 0;
 			}
 			//constructing from word prototypes(see below for context)
 			else if(islastlegal){
 				tmp = malloc(words[wordcounter-1].len * sizeof(char));
 				memcpy(tmp, words[wordcounter-1].str, words[wordcounter-1].len);
 				words[wordcounter-1].str = tmp;
-				//words[wordcounter-1].assigned = 1;
 			}
 			
 			islastlegal = 0;
