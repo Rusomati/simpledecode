@@ -37,7 +37,6 @@ int filter(wrd *word)
 
 wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 {
-	printf("%.*s\n", buf->len, buf->str);
 	int len = buf->len;
 	char *str = buf->str;
 	wrd *words = malloc((len/2) * sizeof(wrd));//maximum word entries possible
