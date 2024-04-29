@@ -4,23 +4,20 @@
 #include <limits.h>
 #include "common.h"
 
-void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize, byte ignorequotes)
+void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize)
 {
 	wrd *res = args->words;
 	wrd *fileword = args->fileword;
 	char *buf = args->buf;
+
+	FILE *fp = args->fp;
+	int fsize = args->fsize;
 
 	int cnt = *count;
 	//initialising 'results'
 	//wrd *res = malloc(cnt * sizeof(wrd));
 	int writeindex = 0;
 
-	//(mostly) initialising stuff for getword
-	FILE *fp;
-	if(ignorequotes)fp = fopen("../newerdict.txt", "r");
-	else fp = fopen("../newdict.txt", "r");//will utils betray us?
-	fseek(fp, 0, SEEK_END);
-	int fsize = ftell(fp);
 	//char *buf = malloc(bufsize * sizeof(char));
 	//wrd *fileword = makewrd(NULL, bufsize/2);
 
@@ -73,8 +70,14 @@ void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize, byte ignore
 	//return res;
 }
 
-void wordsinfilepre(wifargs *args, int bufsize, wrd *words)
-{
+void wordsinfilepre(wifargs *args, int bufsize, wrd *words, byte ignorequotes)
+{	
+	//(mostly) initialising stuff for getword
+	if(ignorequotes)args->fp = fopen("../newerdict.txt", "r");
+	else args->fp = fopen("../newdict.txt", "r");//will utils betray us?
+	fseek(args->fp, 0, SEEK_END);
+	args->fsize = ftell(args->fp);
+
 	args->fileword = makewrd(NULL, bufsize/2);
 	args->buf = malloc(bufsize * sizeof(char));
 	args->words = words;

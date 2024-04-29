@@ -1,3 +1,2 @@
-filterbufize length is shrinking
-finish wif
+switch from read to mmap
 and clean up the code

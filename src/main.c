@@ -42,7 +42,7 @@ int main(int argc, char **argv)
 	locatepre(&args, len*2);
 
 	wifargs wargs;
-	wordsinfilepre(&wargs, bufsize, args.words);
+	wordsinfilepre(&wargs, bufsize, args.words, flagss.ignorequotes);
 
 	for (int i=1;i<iterations;i++)
 	{
@@ -58,15 +58,10 @@ int main(int argc, char **argv)
 			word.str = rotbuf;
 		}
 
-		//printf("%d\n", args.filterbuf.len);		
 		locate(&args, &word, &wrdcnt, &charcnt, flagss.ignorequotes);//is chrcnt useless??
-		//for(int i=0;i<wrdcnt;i++)
-		//{
-			//printf("%p, %.*s\n", &args.words[i], args.words[i].len, args.words[i].str);
-		//}
 
 		
-		wordsinfile(&wargs, args.words, &wrdcnt, bufsize, flagss.ignorequotes);//improve
+		wordsinfile(&wargs, args.words, &wrdcnt, bufsize);//improve
 
 		eval = streval(wargs.words, wrdcnt, charcnt);
 		if(eval > flagss.threshold * thresholdmp)
@@ -89,7 +84,6 @@ int main(int argc, char **argv)
 	free(args.words);
 	locatefree(&args);
 	wordsinfilefree(&wargs);
-	//wordsinfilefree(&wargs);
 	if(rotbuf)free(rotbuf);
 	free(todecode);
 	free(decoded);

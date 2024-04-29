@@ -60,12 +60,13 @@ typedef struct wordsinfileargs{
 	wrd *words;
 	wrd *fileword;
 	char *buf;
-	//add a file pointer
+	FILE *fp;
+	int fsize;
 }wifargs;
 
-void wordsinfilepre(wifargs* args, int bufsize, wrd *words);
+void wordsinfilepre(wifargs* args, int bufsize, wrd *words, byte ignorequotes);
 
-void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize, byte ignorequotes);
+void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize);
 //checks if wrds exist in a sorted file using binary search
 
 void wordsinfilefree(wifargs *args);
