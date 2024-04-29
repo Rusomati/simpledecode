@@ -33,9 +33,18 @@ void decode(char *text, int len, int offset, char *res, int *reslen);
 wrd *makewrd(char *str, int len);
 void freewrd(wrd *words, int count);
 
-int filter(wrd *word);//removes '\'' from a word
-wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote);
+typedef struct locateargs{
+	wrd *words;
+	wrd filterbuf;//a massive string
+}locateargs;
+
+void locatepre(locateargs *args, int len);
+
+int filter(wrd *word, wrd *buf,int *offset);//removes '\'' from a word
+void locate(locateargs *args, wrd *buf, int *wordcnt, int *charcnt, byte ignorequote);
 //^^ converts a string into a 'simplified' array of wrds
+
+void locatefree(locateargs *args);
 
 int comparewrd(wrd *w_one, wrd *w_two);
 //^^ return zero on equal one for 'greater than' (down)
@@ -47,8 +56,19 @@ int comparewrd(wrd *w_one, wrd *w_two);
 int getword(int pos, FILE *fp, wrd* word_got, char *buf, int fsize, int bufsize);
 //^^untested main(might not be the only untested main..
 
-wrd *wordsinfile(wrd *words, int *count, int bufsize, byte ignorequotes);
+typedef struct wordsinfileargs{
+	wrd *words;
+	wrd *fileword;
+	char *buf;
+	//add a file pointer
+}wifargs;
+
+void wordsinfilepre(wifargs* args, int bufsize, wrd *words);
+
+void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize, byte ignorequotes);
 //checks if wrds exist in a sorted file using binary search
+
+void wordsinfilefree(wifargs *args);
 
 unsigned long long streval(wrd *words, int cnt, int chars);
 //evaluates a list of words in terms of how human they are, fairly basic atm

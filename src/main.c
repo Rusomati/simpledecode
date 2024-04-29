@@ -23,7 +23,6 @@ int main(int argc, char **argv)
 	char *decoded = malloc(2 * len * sizeof(char));
         int decodedlen;
 
-	wrd *words;
 	wrd word;
 	int wrdcnt = 0, charcnt = 0;
 	//len can be "halfed" under assumptions
@@ -36,7 +35,15 @@ int main(int argc, char **argv)
 		rotbuf = malloc(lenn * sizeof(char));
 		memcpy(rotbuf, str, lenn);///////////
 	}
+
 	long long eval;
+
+	locateargs args;
+	locatepre(&args, len*2);
+
+	wifargs wargs;
+	wordsinfilepre(&wargs, bufsize, args.words);
+
 	for (int i=1;i<iterations;i++)
 	{
 		
@@ -50,11 +57,18 @@ int main(int argc, char **argv)
 			word.len = lenn;
 			word.str = rotbuf;
 		}
-		words = locate(&word, &wrdcnt, &charcnt, flagss.ignorequotes);//is chrcnt useless??
 
-		words = wordsinfile(words, &wrdcnt, bufsize, flagss.ignorequotes);//improve
+		//printf("%d\n", args.filterbuf.len);		
+		locate(&args, &word, &wrdcnt, &charcnt, flagss.ignorequotes);//is chrcnt useless??
+		//for(int i=0;i<wrdcnt;i++)
+		//{
+			//printf("%p, %.*s\n", &args.words[i], args.words[i].len, args.words[i].str);
+		//}
 
-		eval = streval(words, wrdcnt, charcnt);
+		
+		wordsinfile(&wargs, args.words, &wrdcnt, bufsize, flagss.ignorequotes);//improve
+
+		eval = streval(wargs.words, wrdcnt, charcnt);
 		if(eval > flagss.threshold * thresholdmp)
 		{
 			if(!flagss.userot){
@@ -68,10 +82,14 @@ int main(int argc, char **argv)
 				printf("%.*s\n", lenn, rotbuf);
 			}
 		}
+		
 
-		freewrd(words, wrdcnt);//i dont want this in my loop
 	}
 
+	free(args.words);
+	locatefree(&args);
+	wordsinfilefree(&wargs);
+	//wordsinfilefree(&wargs);
 	if(rotbuf)free(rotbuf);
 	free(todecode);
 	free(decoded);

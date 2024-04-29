@@ -36,12 +36,9 @@ wrd *makewrd(char *string, int len)
 void freewrd(wrd *words, int count)
 {
 	for (int i=0;i<count;i++){
+		//printf("attempting to free: %p, str: %.*s\n", &words[i], words[i].len, words[i].str);
 		free(words[i].str);
-		words[i].str = NULL;
 	}
-	//fprintf(stderr, "test\n");
-	//if(count>1)free(words);
-	//else free(*words);
 	free(words);
 }
 

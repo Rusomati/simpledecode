@@ -4,11 +4,15 @@
 #include <limits.h>
 #include "common.h"
 
-wrd *wordsinfile(wrd *words, int *count, int bufsize, byte ignorequotes)
+void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize, byte ignorequotes)
 {
+	wrd *res = args->words;
+	wrd *fileword = args->fileword;
+	char *buf = args->buf;
+
 	int cnt = *count;
 	//initialising 'results'
-	wrd *res = malloc(cnt * sizeof(wrd));
+	//wrd *res = malloc(cnt * sizeof(wrd));
 	int writeindex = 0;
 
 	//(mostly) initialising stuff for getword
@@ -17,8 +21,8 @@ wrd *wordsinfile(wrd *words, int *count, int bufsize, byte ignorequotes)
 	else fp = fopen("../newdict.txt", "r");//will utils betray us?
 	fseek(fp, 0, SEEK_END);
 	int fsize = ftell(fp);
-	char *buf = malloc(bufsize * sizeof(char));
-	wrd *fileword = makewrd(NULL, bufsize/2);
+	//char *buf = malloc(bufsize * sizeof(char));
+	//wrd *fileword = makewrd(NULL, bufsize/2);
 
 	for(int i=0;i<cnt;i++)
 	{
@@ -53,19 +57,33 @@ wrd *wordsinfile(wrd *words, int *count, int bufsize, byte ignorequotes)
 			}
 
 			if(!(tomove+moved) || wordpos<0){
-				free(words[i].str);
+				//free(words[i].str);
+				//!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 				break;
 			}
 		}
 	}
 
-	free(buf);
-	freewrd(fileword, 1);
-	free(words);//does not free the strings
+	//free(buf);
+	//freewrd(fileword, 1);
+	//free(words);//does not free the strings
 
 	*count = writeindex;
-	res = realloc(res, *count * sizeof (wrd));
-	return res;
+	//res = realloc(res, *count * sizeof (wrd));
+	//return res;
+}
+
+void wordsinfilepre(wifargs *args, int bufsize, wrd *words)
+{
+	args->fileword = makewrd(NULL, bufsize/2);
+	args->buf = malloc(bufsize * sizeof(char));
+	args->words = words;
+}
+
+void wordsinfilefree(wifargs *args)
+{
+	free(args->buf);
+	freewrd(args->fileword, 1);
 }
 
 /*

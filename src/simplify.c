@@ -5,45 +5,55 @@
 
 //we can theoratically prevent a call if the string is all '
 //still 'unlikely' so idc for now
-int filter(wrd *word)
+int filter(wrd *word, wrd *buf, int *offset)
 {
-	char *buf = malloc(word->len * sizeof(char));
+
+	int off = *offset;
+	if (word->len+off > buf->len)
+	{
+		int newlength = buf->len;
+		while(word->len + off > newlength)newlength*=4;
+		buf->str = realloc(buf->str, newlength * sizeof(char));
+		buf->len = newlength;
+	}
 
 	int i=0, ii=0, legalchcnt = 0;//legal chracter count
+	char *tmp;
 	//ii is the shift and i is the write index
 	//their sum is the read index
 	for(;(i+ii)<(word->len);i++)
 	{
 		if (word->str[i+ii]=='\''){ii++;i--;}
 		else{
-			buf[i] = word->str[i+ii];
+			buf->str[off+i] = word->str[i+ii];
 			legalchcnt++;
 		}
 	}
-	//if (word->assigned)free(word->str);//untested and unnecessary in this case
-	//word->assigned = 0;unnecessary becaue of the lines below
-	//word->assigned = 1;
 	
 	if (legalchcnt){
+		word->str = &buf->str[off];
 		word->len = i;
-		word->str = buf;
+		*offset+=i;
+		//printf("filtered word: %.*s\n", i, &buf->str[off]);
+		//printf("%d\n", buf->len);
 	}
-	else {
-		free(buf);
-	}
+
+	//printf("%d\n", buf->len);
 
 	return legalchcnt;
 }
 
-wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
+void locate(locateargs *pointers, wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 {
+	wrd *words = pointers->words;
+	wrd *filterbuf = &pointers->filterbuf;//
+
 	int len = buf->len;
 	char *str = buf->str;
-	wrd *words = malloc((len/2) * sizeof(wrd));//maximum word entries possible
-	//for(int i=0;i<(len/2);i++)words[i].assigned = 0;
 
 	char *tmp;
-	unsigned char shouldfilter = 0;//a flag to call filter once per "unfiltered" word
+	int offset = 0;
+	byte shouldfilter = 0;//a flag to call filter once per "unfiltered" word
 	char islastlegal = 0;//a flag to check wether this is a new word or not//
 	int wordcounter = 0, chcnter = 0;//charcount-er
 	//filter and tracker loop
@@ -59,16 +69,14 @@ wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 			//hacks can suck a lot..the hack is now more complicated than
 			//the straightforward option
 			if (shouldfilter&&ignorequote) {
-				if(!filter(&words[wordcounter-1])){
+
+				if(!filter(&words[wordcounter-1], filterbuf, &offset)){
 					wordcounter--;
 				}
 				shouldfilter = 0;
 			}
 			//constructing from word prototypes(see below for context)
 			else if(islastlegal){
-				tmp = malloc(words[wordcounter-1].len * sizeof(char));
-				memcpy(tmp, words[wordcounter-1].str, words[wordcounter-1].len);
-				words[wordcounter-1].str = tmp;
 			}
 			
 			islastlegal = 0;
@@ -77,25 +85,38 @@ wrd *locate(wrd *buf, int *wordcnt, int *charcnt, byte ignorequote)
 		//constructing a wrd prototype
 		//(wrd has two uses in this function)
 		if (!islastlegal){
-			shouldfilter = 0;
 			words[wordcounter].str=&str[chcnter];
 			words[wordcounter].len = 1;
 			wordcounter++;
 		}
 		else
-			words[wordcounter-1].len++;//
+			words[wordcounter-1].len++;
 
 		islastlegal = 1;
 	}
-
+	
 	//ignore a possibly incomplete word
 	if (islastlegal)wordcounter--;
+
+	//free(filterbuf);
+
 	//set "requested" values
 	*charcnt = chcnter;
 	*wordcnt = wordcounter;
-	//realloc might move the memory
-	wrd *res = realloc(words, sizeof(wrd) * wordcounter);
-	return res;
+
+}
+
+void locatepre(locateargs *args, int len)
+{
+	args->words = calloc((len/2),  sizeof(wrd));//maximum word entries possible
+	args->filterbuf.len = 256;//temporary size?
+	args->filterbuf.str = malloc(args->filterbuf.len * sizeof(char));
+	//^^ resize when needed
+}
+
+void locatefree(locateargs *args)
+{
+	free(args->filterbuf.str);
 }
 
 /*
