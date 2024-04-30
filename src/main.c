@@ -5,6 +5,7 @@
 
 int main(int argc, char **argv)
 {
+	const int limit = 256;
 	flags flagss = {
 		.ignorequotes=1,
 		.userot=0,
@@ -48,13 +49,14 @@ int main(int argc, char **argv)
 	{
 		
 		if(!flagss.userot){
-			decode(todecode, len, i, decoded, &decodedlen);//key = 'len'/i
+			decode(todecode, (len < limit)?len:limit, i, decoded, &decodedlen);//key = 'len'/i
 			//^^ use the wrd 'api' for this possibly and more
 			word.len = decodedlen;
 			word.str = decoded;
 		}else {
-			decoderot(rotbuf, str, lenn, i, capitaloff);
-			word.len = lenn;
+			int tmplen = (lenn < limit)?lenn:limit;
+			decoderot(rotbuf, str, tmplen, i, capitaloff);
+			word.len = tmplen;
 			word.str = rotbuf;
 		}
 
@@ -81,6 +83,7 @@ int main(int argc, char **argv)
 
 	}
 
+	//printf("%d, %d, %d\n", //decoded chars, //words got from locate , //words got from wif);
 	free(args.words);
 	locatefree(&args);
 	wordsinfilefree(&wargs);

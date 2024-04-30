@@ -1,2 +1,2 @@
-switch from read to mmap
+test limit feature and its effectiveness
 and clean up the code
