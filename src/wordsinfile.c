@@ -2,6 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <limits.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/mman.h>
 #include "common.h"
 
 void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize)
@@ -73,20 +76,26 @@ void wordsinfile(wifargs *args, wrd *words, int *count, int bufsize)
 void wordsinfilepre(wifargs *args, int bufsize, wrd *words, byte ignorequotes)
 {	
 	//(mostly) initialising stuff for getword
-	if(ignorequotes)args->fp = fopen("../newerdict.txt", "r");
-	else args->fp = fopen("../newdict.txt", "r");//will utils betray us?
-	fseek(args->fp, 0, SEEK_END);
-	args->fsize = ftell(args->fp);
+	char pathnq[] = "../newerdict.txt";
+	char pathq[] = "../newdict.txt";
+	char *path = (ignorequotes)?pathnq:pathq;
 
-	args->fileword = makewrd(NULL, bufsize/2);
-	args->buf = malloc(bufsize * sizeof(char));
+        int fd = open(path, O_RDONLY);
+	struct stat filestat;
+	fstat(fd, &filestat);
+	args->fsize = filestat.st_size;
+
+	wrd *tmp = malloc(sizeof(wrd));
+	tmp->len = bufsize/2;
+	args->fileword = tmp;
+	args->buf = mmap(NULL, args->fsize, PROT_READ, MAP_SHARED, fd, 0);
 	args->words = words;
 }
 
 void wordsinfilefree(wifargs *args)
 {
-	free(args->buf);
-	freewrd(args->fileword, 1);
+	munmap(args->buf, args->fsize);
+	free(args->fileword);
 }
 
 /*

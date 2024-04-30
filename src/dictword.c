@@ -1,19 +1,18 @@
-//define bufsize well
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include "common.h"
 
+//test
 int getword(int pos, FILE *fp, wrd *word_got, char *buf, int fsize, int bufsize)
 {
 
-	int buf_offset = bufsize/2;
+	//int buf_offset = bufsize/2;
 	//for low values
-	if(buf_offset > pos)buf_offset = pos;
+	//if(buf_offset > pos)buf_offset = pos;
 
-	fseek(fp, (long)(pos-buf_offset), SEEK_SET);
-	fread(buf, sizeof(char), bufsize, fp);
+	//fseek(fp, (long)(pos-buf_offset), SEEK_SET);
+	//fread(buf, sizeof(char), bufsize, fp);
 
 	//out of bound check ig
 	if(pos<=1||pos>=fsize){
@@ -21,7 +20,7 @@ int getword(int pos, FILE *fp, wrd *word_got, char *buf, int fsize, int bufsize)
 		return -1;
 	}
 
-	int frontcnt = buf_offset, backcnt = buf_offset;
+	int frontcnt = pos, backcnt = pos;
 	
 
 	//if pos hits a \n we will ignore it
@@ -35,9 +34,10 @@ int getword(int pos, FILE *fp, wrd *word_got, char *buf, int fsize, int bufsize)
 
 	//copy word
 	word_got->len = frontcnt - backcnt - 1;//added -1 to simplify stuff..
-	memcpy(word_got->str, &buf[backcnt+1], word_got->len);
+	word_got->str =&buf[backcnt+1];//
+	//memcpy(word_got->str, &buf[backcnt+1], word_got->len);
 	//return the startof the word got
-	return pos+backcnt+1-buf_offset;
+	return pos-backcnt;//
 }
 
 //untested and will prob fail
