@@ -27,7 +27,7 @@ char *lowerplus(char *str, int *length, byte lwr);
 
 void decoderot(char *buf, char *str, int len, int key, byte capitaloff);
 
-void decode(char *text, int len, int offset, char *res, int *reslen);
+void decode(char *text, int len, int origlen, int offset, char *res, int *reslen);
 //(transponder?) decoder
 
 wrd *makewrd(char *str, int len);

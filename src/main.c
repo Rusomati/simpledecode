@@ -27,7 +27,6 @@ int main(int argc, char **argv)
 	wrd word;
 	int wrdcnt = 0, charcnt = 0;
 	//len can be "halfed" under assumptions
-	//add a flag for it
 	int iterations = (flagss.half)?len/2:len;
 	char *rotbuf = NULL;
 	char capitaloff = (flagss.ignorequotes)?'a':'A';
@@ -49,7 +48,7 @@ int main(int argc, char **argv)
 	{
 		
 		if(!flagss.userot){
-			decode(todecode, (len < limit)?len:limit, i, decoded, &decodedlen);//key = 'len'/i
+			decode(todecode, (len < limit)?len:limit, len, i, decoded, &decodedlen);//key = 'len'/i
 			//^^ use the wrd 'api' for this possibly and more
 			word.len = decodedlen;
 			word.str = decoded;
@@ -60,11 +59,13 @@ int main(int argc, char **argv)
 			word.str = rotbuf;
 		}
 
+		//printf("%.*s\n", word.len, word.str);
 		locate(&args, &word, &wrdcnt, &charcnt, flagss.ignorequotes);//is chrcnt useless??
 
 		
 		wordsinfile(&wargs, args.words, &wrdcnt, bufsize);//improve
 
+		//for(int i=0;i<wrdcnt;i++)printf("-%.*s-\n", wargs.words[i].len, wargs.words[i].str);
 		eval = streval(wargs.words, wrdcnt, charcnt);
 		if(eval > flagss.threshold * thresholdmp)
 		{
@@ -73,7 +74,7 @@ int main(int argc, char **argv)
 				free(todecode);
 				lenn/=2;
         			todecode = lowerplus(str, &lenn, 0);
-				decode(todecode, len, i, decoded, &decodedlen);
+				decode(todecode, len, len, i, decoded, &decodedlen);
 				printf("%lld\t%.*s\n", eval, decodedlen, decoded);
 			}else{
 				printf("%.*s\n", lenn, rotbuf);
@@ -83,7 +84,6 @@ int main(int argc, char **argv)
 
 	}
 
-	//printf("%d, %d, %d\n", //decoded chars, //words got from locate , //words got from wif);
 	free(args.words);
 	locatefree(&args);
 	wordsinfilefree(&wargs);

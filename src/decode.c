@@ -4,20 +4,22 @@
 #include "common.h"
 
 //optimise
-void decode(char * text, int len, int offset, char *res, int *reslen)
+void decode(char * text, int len, int origlen, int offset, char *res, int *reslen)
 {
 	int rem = (len%offset)?(offset-(len%offset)):0;//
+	int prevlen = len;
 	len+=rem;
 	int windex = 0;
 
-	for (int i=0;i<offset;i++)
-		for (int ii=i;ii<len;){
+	//for (int i=0;i<offset;i++)
+	for(int i=0;windex<prevlen;i++)
+		for (int ii=i;ii<origlen&&windex<prevlen;){
 			res[windex] = text[ii];
 			ii+=offset;
 			windex++;
 	}
 
-	*reslen = len;
+	*reslen = windex;
 }
 
 /*
