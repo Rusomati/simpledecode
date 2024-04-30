@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -fsanitize=address,undefined,leak -O2 -lm -g -I./
+#CFLAGS = -O2 -I./
 #-lm......
 CPRODFLAGS = -I./ 
 #CPPFLAGS = -I./common.h

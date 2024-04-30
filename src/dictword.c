@@ -31,13 +31,14 @@ int getword(int pos, FILE *fp, wrd *word_got, char *buf, int fsize, int bufsize)
 	//length = distance to start + distance to end..
 	for(;buf[frontcnt]!='\n';frontcnt++);
 	for(;buf[backcnt]!='\n';backcnt--);
+	backcnt++;
 
 	//copy word
-	word_got->len = frontcnt - backcnt - 1;//added -1 to simplify stuff..
-	word_got->str =&buf[backcnt+1];//
+	word_got->len = frontcnt - backcnt;
+	word_got->str =&buf[backcnt];//
 	//memcpy(word_got->str, &buf[backcnt+1], word_got->len);
 	//return the startof the word got
-	return pos-backcnt;//
+	return backcnt;//
 }
 
 //untested and will prob fail
